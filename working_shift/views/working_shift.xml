@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Working Shift list view -->
+    <record id="working_shift_tree_view" model="ir.ui.view">
+        <field name="name">working.shift.tree.view</field>
+        <field name="model">working.shift</field>
+        <field name="arch" type="xml">
+            <tree string="Working Shift">
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Working Shift form view-->
+    <record id="working_shift_form_view" model="ir.ui.view">
+        <field name="name">working.shift.form.view</field>
+        <field name="model">working.shift</field>
+        <field name="arch" type="xml">
+            <form string="Working Shift">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" nolabel="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <group>
+                        <p style="color: red;">* Enter time in 24 hours format</p>
+                    </group>
+                    <notebook>
+                        <page name="working_shift_lines" string="Shift Lines">
+                            <field name="shift_lines">
+                                <tree string="Shift Lines" editable="bottom">
+                                    <field name="working_shift_id" invisible="1"/>
+                                    <field name="shift_date"/>
+                                    <field name="shift_no_one"/>
+                                    <field name="one_start" widget="float_time"/>
+                                    <field name="one_end" widget="float_time"/>
+                                    <field name="shift_no_two"/>
+                                    <field name="two_start" widget="float_time"/>
+                                    <field name="two_end" widget="float_time"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--    Action for Working Shifts-->
+    <record id="action_working_shift" model="ir.actions.act_window">
+        <field name="name">Working Shifts</field>
+        <field name="res_model">working.shift</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_working_shift_root" name="Working Shift" parent="mrp.menu_mrp_root" sequence="20"
+              groups="base.group_user"/>
+    <menuitem id="menu_working_shifts" name="Working Shifts" action="action_working_shift"
+              parent="menu_working_shift_root" sequence="1" groups="base.group_user"/>
+
+</odoo>

@@ -1,0 +1,3 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+working_shift_access_base_user,working_shift_access_base,model_working_shift,base.group_user,1,1,1,1
+working_shift_lines_base_user,working_shift_lines_base,model_working_shift_lines,base.group_user,1,1,1,1
