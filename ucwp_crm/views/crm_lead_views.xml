@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- CRM Lead view inherit -->
+    <record id="crm_lead_view_form_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.union.colombo</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_schedule_meeting']" position="before">
+                <button name="action_view_delivery"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        attrs="{'invisible': [('delivery_count', '=', 0)]}">
+                    <div class="o_stat_info">
+                        <field name="delivery_count"/>
+                        <span class="o_stat_text">Garment Deliveries</span>
+                    </div>
+                </button>
+                <button name="action_view_price_estimates"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-dollar"
+                        attrs="{'invisible': [('price_estimate_count', '=', 0)]}">
+                    <div class="o_stat_info">
+                        <field name="price_estimate_count"/>
+                        <span class="o_stat_text">Price Estimates</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//group[@name='lead_priority']" position="after">
+                <group></group>
+                <group attrs="{'invisible': [('type', '=', 'lead')]}">
+                    <field name="buyer"/>
+                    <field name="product_id"/>
+                    <field name="item"/>
+                    <field name="contact_person"/>
+                </group>
+                <group attrs="{'invisible': [('type', '=', 'lead')]}">
+                    <field name="estimate_price"/>
+                    <field name="order_qty"/>
+                    <field name="weight"/>
+                    <field name="wash_type"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[1]" position="before">
+                <div class="oe_title">
+                    <h1>
+                        <field name="sequence_number" nolabel="1"/>
+                    </h1>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Price estimate view inherit -->
+    <record id="pre_costing_view_form_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">pre.costing.form.inherit.union.colombo</field>
+        <field name="model">pre.costing</field>
+        <field name="inherit_id" ref="price_estimate.pre_costing_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='customer']" position="before">
+                <field name="opportunity_no"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

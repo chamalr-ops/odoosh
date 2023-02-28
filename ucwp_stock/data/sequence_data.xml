@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Sequence for Chemical -->
+        <record id="internal_reference_chemical_sequence" model="ir.sequence">
+            <field name="name">Internal Reference Sequence</field>
+            <field name="code">product.chemical.number</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">CHEM</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+        </record>
+
+        <!-- Sequence for Bulk Product (UC Number) -->
+        <record id="internal_reference_sequence" model="ir.sequence">
+            <field name="name">UC Number Sequence</field>
+            <field name="code">product.uc.number</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">UC</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+        </record>
+
+        <!-- Sequence for Sample Product -->
+        <record id="internal_reference_sample_sequence" model="ir.sequence">
+            <field name="name">Sample Product Sequence</field>
+            <field name="code">sample.product.number</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">S</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+        </record>
+
+        <!-- Sequence for Internal Reference Number -->
+        <record id="uc_reference_sequence" model="ir.sequence">
+            <field name="name">Internal Reference</field>
+            <field name="code">product.internal.reference</field>
+            <field name="implementation">standard</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+        </record>
+
+        <!-- Sequence for stock move lines -->
+        <record id="stock_move_lines_sequence" model="ir.sequence">
+            <field name="name">Stock Move Lines</field>
+            <field name="code">stock.move.line</field>
+            <field name="implementation">standard</field>
+            <field name="prefix">G/SPLIT/</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+        </record>
+    </data>
+</odoo>

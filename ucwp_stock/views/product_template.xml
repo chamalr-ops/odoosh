@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Form view used for product.template only -->
+    <record id="product_template_form_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">product.template.product.form.view.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='options']/span[2]" position="after">
+                <span class="d-inline-block">
+                    <field name="is_garment"/>
+                    <label for="is_garment"/>
+                </span>
+                <!--  -->
+                <span class="d-inline-block">
+                    <field name="is_chemical"/>
+                    <label for="is_chemical"/>
+                </span>
+                <!-- [UC-24] -->
+                <span class="d-inline-block" attrs="{'invisible': [('is_garment', '=', False)]}">
+                    <field name="available_certification"/>
+                    <label for="available_certification"/>
+                </span>
+            </xpath>
+
+            <xpath expr="//page[@name='sales']" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': [('is_garment', '=', True)]}
+                </attribute>
+            </xpath>
+            <xpath expr="//page[@name='purchase']" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': [('is_garment', '=', True)]}
+                </attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='general_information']" position="after">
+                <!-- Style Information Tab -->
+                <page string="Style Information" name="general_information"
+                      attrs="{'invisible': [('is_garment','=',False)]}">
+                    <group name="group_general">
+                        <group>
+                            <field name="customer" attrs="{'required': [('is_garment', '=', True)]}"/>
+                            <field name="buyer" attrs="{'required': [('is_garment', '=', True)]}"/>
+                        </group>
+                        <group>
+                            <field name="garment_type" attrs="{'required': [('is_garment', '=', True)]}"/>
+                        </group>
+                    </group>
+                    <!-- [UC-24] -->
+                    <group>
+                        <group>
+                            <field name="certification"
+                                   attrs="{'required': [('available_certification', '=', True)], 'invisible': [('available_certification', '=', False)]}"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//button[@name='open_pricelist_rules']" position="before">
+                <button name="action_view_price_estimates"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-dollar"
+                        attrs="{'invisible': [('price_estimate_count', '=', 0)]}">
+                    <div class="o_stat_info">
+                        <field name="price_estimate_count"/>
+                        <span class="o_stat_text">Price Estimates</span>
+                    </div>
+                </button>
+            </xpath>
+
+            <xpath expr="//field[@name='taxes_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='variants']" position="after">
+                <!-- MSDS Information Tab -->
+                <page string="MSDS Information" name="msds_information"
+                      attrs="{'invisible': [('is_chemical', '=', False)]}">
+                    <group>
+                        <group>
+                            <field name="other_name"/>
+                            <field name="chemical_formulator_type"/>
+                        </group>
+                        <group>
+                            <field name="manufacturer_formulator"/>
+                            <field name="local_agent"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="EIM Rating">
+                            <field name="environment"/>
+                            <field name="worker_health"/>
+                            <field name="location"/>
+                        </group>
+                        <group string="GOTS">
+                            <field name="category"/>
+                            <field name="chemical_type"/>
+                            <field name="used_for"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="MSDS">
+                            <field name="available"/>
+                            <field name="issue_date"/>
+                            <field name="version"/>
+                            <field name="revision_date"/>
+                        </group>
+                        <group string="Sign(Label)">
+                            <field name="explosive"/>
+                            <field name="health_hazard"/>
+                            <field name="flammable"/>
+                            <field name="environmental_hazard"/>
+                            <field name="toxic"/>
+                            <field name="corrosive"/>
+                            <field name="oxidizing"/>
+                            <field name="compressed_gas"/>
+                            <field name="warning_irritant"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Personal Protection">
+                            <field name="respirator"/>
+                            <field name="gloves"/>
+                            <field name="footwear"/>
+                            <field name="eye_wear"/>
+                            <field name="apron"/>
+                            <field name="dust_mask"/>
+                            <field name="overalls"/>
+                            <field name="face_shield"/>
+                            <field name="safety_helmet"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <group string="Measures for Cleaning">
+                        <group>
+                            <field name="measures_for_cleaning_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="measures_for_cleaning_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Storage Condition">
+                        <group>
+                            <field name="storage_condition_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="storage_condition_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Hazard Identification">
+                        <group>
+                            <field name="hazard_identification_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="hazard_identification_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Ratings">
+                            <field name="health"/>
+                            <field name="flammability"/>
+                            <field name="reactivity_level"/>
+                            <field name="contact"/>
+                        </group>
+                        <group string="Risk">
+                            <field name="severity"/>
+                            <field name="likelihood"/>
+                            <!-- Change risk rating color according to risk rating value -->
+                            <field name="risk_rating" style="background-color: #00ff00; color: #ffffff;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [1, 2, 3, 4, 5])]}"/>
+                            <field name="risk_rating" style="background-color: #ffff00;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [6, 7, 8, 9, 10])]}"/>
+                            <field name="risk_rating" style="background-color: #663300; color: #ffffff;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [11, 12, 13, 14, 15])]}"/>
+                            <field name="risk_rating" style="background-color: 	#ff0000; color: #ffffff;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [16, 17, 18, 19, 20, 21, 22, 23, 24, 25])]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="storage_class"/>
+                        </group>
+                        <group string="Fire Extinguishers">
+                            <field name="water"/>
+                            <field name="foom"/>
+                            <field name="dry_powder"/>
+                            <field name="carbon_dioxide"/>
+                        </group>
+                    </group>
+                    <div class="oe_title">
+                        <p class="o_form_label">
+                            <u>First Aid</u>
+                        </p>
+                    </div>
+                    <group string="Inhalation">
+                        <group>
+                            <field name="inhalation_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="inhalation_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Eye Contact">
+                        <group>
+                            <field name="eye_contact_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="eye_contact_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Skin Contact">
+                        <group>
+                            <field name="skin_contact_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="skin_contact_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Ingestion/Swallowing">
+                        <group>
+                            <field name="ingestion_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="ingestion_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="General">
+                        <group>
+                            <field name="general_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="general_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Physical and Chemical Properties">
+                        <group>
+                            <field name="appearance"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="chemical_color"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="odor"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="stability"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="incompatible_materials" widget="many2many_tags"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="reactivity"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </page>
+                <!-- Chemical Standards Tab -->
+                <page string="Chemical Standards" name="chemical_standards"
+                      attrs="{'invisible': [('is_chemical', '=', False)]}">
+                    <field name="chemical_standards">
+                        <tree string="Chemical Standards" editable="bottom">
+                            <field name="name" attrs="{'required': [('parent.is_chemical', '=', True)]}"/>
+                            <field name="document" widget="many2many_binary"
+                                   attrs="{'required': [('parent.is_chemical', '=', True)]}"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+            <!-- Lab/Reports Tab -->
+            <xpath expr="//page[@name='inventory']" position="after">
+                <page string="Test/Lab Reports" name="lab_reports"
+                      attrs="{'invisible': [('is_garment', '=', False)]}">
+                    <field name="lab_reports">
+                        <tree string="Test/Lab Reports" editable="bottom">
+                            <field name="name" attrs="{'required': [('parent.is_garment', '=', True)]}"/>
+                            <field name="document" widget="many2many_binary"
+                                   attrs="{'required': [('parent.is_garment', '=', True)]}"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+            <xpath expr="//field[@name='default_code']" position="attributes">
+                <attribute name="attrs">{'invisible':[('is_chemical', '!=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='default_code']" position="before">
+                <field name="default_code" string="UC Number" attrs="{'invisible':[('is_chemical', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Product Template internal search-->
+    <record id="product_template_search_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">product.template.search.inherit.union.colombo</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <!-- group by -->
+            <xpath expr="//filter[@name='categ_id']" position="after">
+                <separator/>
+                <filter string="Contact" name="group_by_customer" domain="[]" context="{'group_by': 'customer'}"/>
+                <filter string="Created date" name="group_by_create_date" domain="[]"
+                        context="{'group_by': 'create_date'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Template list view -->
+    <record id="product_template_tree_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">product.template.product.tree.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="attributes">
+                <attribute name="string">UC Number</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Form view used for product.product only -->
+    <record id="product_product_form_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">product.product.form.view.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']/span[2]" position="after">
+                <span class="d-inline-block">
+                    <field name="is_garment"/>
+                    <label for="is_garment"/>
+                </span>
+                <!--  -->
+                <span class="d-inline-block" attrs="{'invisible': [('is_garment', '=', True)]}">
+                    <field name="is_chemical"/>
+                    <label for="is_chemical"/>
+                </span>
+                <!-- [UC-24] -->
+                <span class="d-inline-block" attrs="{'invisible': [('is_garment', '=', False)]}">
+                    <field name="available_certification"/>
+                    <label for="available_certification"/>
+                </span>
+            </xpath>
+
+            <xpath expr="//field[@name='taxes_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='general_information']" position="after">
+                <!-- Style Information Tab -->
+                <page string="Style Information" name="general_information"
+                      attrs="{'invisible': [('is_garment', '=', False)]}">
+                    <group name="group_general">
+                        <group>
+                            <field name="customer"/>
+                            <field name="buyer"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="garment_type"/>
+                        </group>
+                    </group>
+                    <!-- [UC-24] -->
+                    <group>
+                        <group>
+                            <field name="certification"
+                                   attrs="{'required': [('available_certification', '=', True)], 'invisible': [('available_certification', '=', False)]}"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//page[@name='sales']" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': [('is_garment', '=', True)]}
+                </attribute>
+            </xpath>
+            <xpath expr="//page[@name='purchase']" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': [('is_garment', '=', True)]}
+                </attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='sales']" position="before">
+                <!-- MSDS Information Tab -->
+                <page string="MSDS Information" name="msds_information"
+                      attrs="{'invisible': [('is_chemical', '=', False)]}">
+                    <group>
+                        <group>
+                            <field name="other_name"/>
+                            <field name="chemical_formulator_type"/>
+                        </group>
+                        <group>
+                            <field name="manufacturer_formulator"/>
+                            <field name="local_agent"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="EIM Rating">
+                            <field name="environment"/>
+                            <field name="worker_health"/>
+                            <field name="location"/>
+                        </group>
+                        <group string="GOTS">
+                            <field name="category"/>
+                            <field name="chemical_type"/>
+                            <field name="used_for"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="MSDS">
+                            <field name="available"/>
+                            <field name="issue_date"/>
+                            <field name="version"/>
+                            <field name="revision_date"/>
+                        </group>
+                        <group string="Sign(Label)">
+                            <field name="explosive"/>
+                            <field name="health_hazard"/>
+                            <field name="flammable"/>
+                            <field name="environmental_hazard"/>
+                            <field name="toxic"/>
+                            <field name="corrosive"/>
+                            <field name="oxidizing"/>
+                            <field name="compressed_gas"/>
+                            <field name="warning_irritant"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Personal Protection">
+                            <field name="respirator"/>
+                            <field name="gloves"/>
+                            <field name="footwear"/>
+                            <field name="eye_wear"/>
+                            <field name="apron"/>
+                            <field name="dust_mask"/>
+                            <field name="overalls"/>
+                            <field name="face_shield"/>
+                            <field name="safety_helmet"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <group string="Measures for Cleaning">
+                        <group>
+                            <field name="measures_for_cleaning_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="measures_for_cleaning_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Storage Condition">
+                        <group>
+                            <field name="storage_condition_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="storage_condition_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Hazard Identification">
+                        <group>
+                            <field name="hazard_identification_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="hazard_identification_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Ratings">
+                            <field name="health"/>
+                            <field name="flammability"/>
+                            <field name="reactivity_level"/>
+                            <field name="contact"/>
+                        </group>
+                        <group string="Risk">
+                            <field name="severity"/>
+                            <field name="likelihood"/>
+                            <!-- Change risk rating color according to risk rating value -->
+                            <field name="risk_rating" style="background-color: #00ff00; color: #ffffff;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [1, 2, 3, 4, 5])]}"/>
+                            <field name="risk_rating" style="background-color: #ffff00;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [6, 7, 8, 9, 10])]}"/>
+                            <field name="risk_rating" style="background-color: #663300; color: #ffffff;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [11, 12, 13, 14, 15])]}"/>
+                            <field name="risk_rating" style="background-color: 	#ff0000; color: #ffffff;"
+                                   attrs="{'invisible': [('risk_rating', 'not in', [16, 17, 18, 19, 20, 21, 22, 23, 24, 25])]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="storage_class"/>
+                        </group>
+                        <group string="Fire Extinguishers">
+                            <field name="water"/>
+                            <field name="foom"/>
+                            <field name="dry_powder"/>
+                            <field name="carbon_dioxide"/>
+                        </group>
+                    </group>
+                    <div class="oe_title">
+                        <p class="o_form_label">
+                            <u>First Aid</u>
+                        </p>
+                    </div>
+                    <group string="Inhalation">
+                        <group>
+                            <field name="inhalation_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="inhalation_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Eye Contact">
+                        <group>
+                            <field name="eye_contact_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="eye_contact_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Skin Contact">
+                        <group>
+                            <field name="skin_contact_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="skin_contact_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Ingestion/Swallowing">
+                        <group>
+                            <field name="ingestion_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="ingestion_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="General">
+                        <group>
+                            <field name="general_english" string="English"/>
+                        </group>
+                        <group>
+                            <field name="general_sinhala" string="Sinhala"/>
+                        </group>
+                    </group>
+                    <group string="Physical and Chemical Properties">
+                        <group>
+                            <field name="appearance"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="chemical_color"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="odor"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="stability"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="incompatible_materials" widget="many2many_tags"/>
+                        </group>
+                        <group></group>
+                        <group>
+                            <field name="reactivity"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//field[@name='default_code']" position="attributes">
+                <attribute name="attrs">{'invisible':[('is_chemical', '!=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='default_code']" position="before">
+                <field name="default_code" string="UC Number" attrs="{'invisible':[('is_chemical', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product variant list view from Product template form -->
+    <record id="product_product_tree_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">product.product.tree.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="attributes">
+                <attribute name="string">UC Number</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product variant form view from Product template form -->
+    <record id="product_variant_easy_edit_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">product.product.view.form.easy.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="attributes">
+                <attribute name="string">UC Number</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- [UC-23] -->
+    <!-- Chemical Standards list view-->
+    <record id="chemical_standards_tree_view" model="ir.ui.view">
+        <field name="name">chemical.standards.tree.view</field>
+        <field name="model">chemical.standards</field>
+        <field name="arch" type="xml">
+            <tree string="Chemical Standards">
+                <field name="name"/>
+                <field name="document" widget="many2many_binary"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Chemical Standards form view-->
+    <record id="chemical_standards_form_view" model="ir.ui.view">
+        <field name="name">chemical_standards.form.view</field>
+        <field name="model">chemical.standards</field>
+        <field name="arch" type="xml">
+            <form string="Chemical Standards">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="document" widget="many2many_binary"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for Chemical Standards-->
+    <record id="chemical_standards_action" model="ir.actions.act_window">
+        <field name="name">Chemical Standards</field>
+        <field name="res_model">chemical.standards</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- [UC-28] -->
+    <!-- Style Archive Approval list view-->
+    <record id="style_archive_approval_tree_view" model="ir.ui.view">
+        <field name="name">style.archive.approval.tree.view</field>
+        <field name="model">style.archive.approval</field>
+        <field name="arch" type="xml">
+            <tree string="Style Archive Approval">
+                <field name="product_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Style Archive Approval form view -->
+    <record id="style_archive_approval_form_view" model="ir.ui.view">
+        <field name="name">style.archive.approval.form.view</field>
+        <field name="model">style.archive.approval</field>
+        <field name="arch" type="xml">
+            <form string="Style Archive Approval">
+                <header>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','!=', 'draft')]}"/>
+                    <button name="action_set_to_draft" string="Set to Draft" type="object"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','!=', 'approved')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
+
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- action for Style Archive Approval -->
+    <record id="style_archive_approval_action" model="ir.actions.act_window">
+        <field name="name">Style Archive Approval</field>
+        <field name="res_model">style.archive.approval</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="style_archive_approval_action" id="style_archive_approval_menu"
+            parent="stock.menu_stock_warehouse_mgmt" sequence="40"/>
+
+    <record id="res_config_settings_view_form_stock_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.union.colombo</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='warehouse_setting_container']" position="after">
+                <h2 class="mt32">Style Expire</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="style_expire"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="style_expire"/>
+                            <div class="mt8" attrs="{'invisible': [('style_expire', '=', False)]}">
+                                <field name="days"/>
+                                <label for="days"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!--    &lt;!&ndash; Garment type &ndash;&gt;-->
+    <!--        &lt;!&ndash;    garment type list view&ndash;&gt;-->
+    <!--    <record id="garment_type_tree_view" model="ir.ui.view">-->
+    <!--        <field name="name">garment.type.tree.view</field>-->
+    <!--        <field name="model">garment.type</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <tree string="Garment Type">-->
+    <!--                <field name="name"/>-->
+    <!--                <field name="code"/>-->
+    <!--            </tree>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <!--    &lt;!&ndash;    garment type form view&ndash;&gt;-->
+    <!--    <record id="garment_type_form_view" model="ir.ui.view">-->
+    <!--        <field name="name">garment.type.form.view</field>-->
+    <!--        <field name="model">garment.type</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <form string="Garment Type">-->
+    <!--                <sheet>-->
+    <!--                    <group>-->
+    <!--                        <group>-->
+    <!--                            <field name="name"/>-->
+    <!--                        </group>-->
+    <!--                        <group>-->
+    <!--                            <field name="code"/>-->
+    <!--                        </group>-->
+    <!--                    </group>-->
+    <!--                </sheet>-->
+    <!--            </form>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <!--    &lt;!&ndash;    action for garment type&ndash;&gt;-->
+    <!--    <record id="garment_type_action" model="ir.actions.act_window">-->
+    <!--        <field name="name">Garment Type</field>-->
+    <!--        <field name="res_model">garment.type</field>-->
+    <!--        <field name="view_mode">tree,form</field>-->
+    <!--    </record>-->
+    <!--    <menuitem-->
+    <!--            action="garment_type_action" id="garment_type_menu"-->
+    <!--            parent="stock.menu_product_in_config_stock" sequence="103"/>-->
+
+    <!--    &lt;!&ndash; Wash type &ndash;&gt;-->
+    <!--        &lt;!&ndash;    wash type list view&ndash;&gt;-->
+    <!--    <record id="wash_type_tree_view" model="ir.ui.view">-->
+    <!--        <field name="name">wash.type.tree.view</field>-->
+    <!--        <field name="model">wash.type</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <tree string="Wash Type">-->
+    <!--                <field name="name"/>-->
+    <!--                <field name="code"/>-->
+    <!--            </tree>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <!--    &lt;!&ndash;    wash type form view&ndash;&gt;-->
+    <!--    <record id="wash_type_form_view" model="ir.ui.view">-->
+    <!--        <field name="name">wash.type.form.view</field>-->
+    <!--        <field name="model">wash.type</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <form string="Wash Type">-->
+    <!--                <sheet>-->
+    <!--                    <group>-->
+    <!--                        <group>-->
+    <!--                            <field name="name"/>-->
+    <!--                        </group>-->
+    <!--                        <group>-->
+    <!--                            <field name="code"/>-->
+    <!--                        </group>-->
+    <!--                    </group>-->
+    <!--                </sheet>-->
+    <!--            </form>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <!--    &lt;!&ndash;    action for wash type&ndash;&gt;-->
+    <!--    <record id="wash_type_action" model="ir.actions.act_window">-->
+    <!--        <field name="name">Wash Type</field>-->
+    <!--        <field name="res_model">wash.type</field>-->
+    <!--        <field name="view_mode">tree,form</field>-->
+    <!--    </record>-->
+    <!--    <menuitem-->
+    <!--            action="wash_type_action" id="wash_type_menu"-->
+    <!--            parent="stock.menu_product_in_config_stock" sequence="101"/>-->
+
+</odoo>

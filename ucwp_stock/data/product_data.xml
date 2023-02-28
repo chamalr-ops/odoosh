@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="product_category_bulk" model="product.category">
+            <field name="name">Bulk</field>
+        </record>
+        <record id="product_category_sample" model="product.category">
+            <field name="name">Sample</field>
+        </record>
+        <record id="product_category_chemical" model="product.category">
+            <field name="name">Chemical</field>
+        </record>
+        <record id="product_category_accessory" model="product.category">
+            <field name="name">Accessory</field>
+        </record>
+
+        <!-- sample types -->
+        <record id="development_sample" model="product.category">
+            <field name="parent_id" ref="product_category_sample"/>
+            <field name="name">Development Sample</field>
+        </record>
+        <record id="production_sample" model="product.category">
+            <field name="parent_id" ref="product_category_sample"/>
+            <field name="name">Production Sample</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Stock Move Line Barcode Template -->
+    <template id="stock_move_line_barcode">
+        <t t-call="web.html_container">
+            <div class="page">
+                <center>
+                    <h1>Barcode</h1>
+                </center>
+            </div>
+            <br/>
+            <br/>
+            <div style="align: center;">
+                            <div style="text-align: center; vertical-align: middle; width: 200px; height:60px;">
+                                <img t-if="barcode"
+                                     t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', name, 600, 150)"
+                                     style="width:200px;height:40px;"/>
+                                <br/>
+                                <t t-esc="barcode"/>
+                            </div>
+            </div>
+        </t>
+    </template>
+
+    <!--    action for Job Card-->
+    <record id="stock_move_line_barcode_action" model="ir.actions.report">
+        <field name="name">Barcode</field>
+        <field name="model">stock.move.line</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">ucwp_stock.stock_move_line_barcode</field>
+        <field name="report_file">ucwp_stock.stock_move_line_barcode</field>
+        <field name="binding_model_id" ref="model_stock_move_line"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

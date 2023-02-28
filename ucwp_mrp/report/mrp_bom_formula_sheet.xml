@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Formula sheet (BoM) -->
+    <template id="report_formula_sheet">
+        <t t-call="web.html_container">
+            <div id="formula_sheet_header"
+                 style="text-align:center; border-style:solid; width:100%; margin-bottom:20px;">
+                <h2>UNION COLOMBO INDUSTRIAL WASHING (PVT) LTD</h2>
+                <h3>FORMULA SHEET</h3>
+            </div>
+            <t t-foreach="docs" t-as="o">
+                <!--                    <t t-call="web.internal_layout">-->
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row" style="text-align:center; display: inline-block; vertical-align: middle;">
+                        <table style="text-align: center; width: 100%;">
+                            <tr>
+                                <td style="border:1px solid black;">
+                                    <span>Formula No.:</span>
+                                    <span t-field="o.name"/>
+                                </td>
+                                <td style="border: 1px solid black;">
+                                    <span>UC No.:</span>
+                                    <span t-field="o.product_tmpl_id.default_code"/>
+                                </td>
+                                <td style="border: 1px solid black;">
+                                    <span>Formula Type:</span>
+                                    <span t-if="o.product_tmpl_id.categ_id" t-field="o.product_tmpl_id.categ_id.display_name"/>
+                                </td>
+                                <td style="border: 1px solid black;">
+                                    <span>
+                                        <div t-field="o.name"
+                                             t-options="{'widget': 'barcode', 'width': 600, 'height': 60, 'img_style': 'width:350px;height:40px'}"/>
+                                    </span>
+                                    <span t-field="o.name"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="formula_header_details" style="margin:10px 0px 20px 0px;">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="padding-right: 10px">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>Customer</td>
+                                            <td>
+                                                :
+                                                <span t-if="o.product_tmpl_id.customer" t-field="o.product_tmpl_id.customer"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Style No.</td>
+                                            <td>
+                                                :
+                                                <span t-field="o.product_tmpl_id.default_code"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Type wash</td>
+                                            <td>
+                                                :
+                                                <span t-field="o.wash_type"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fabric</td>
+                                            <td>
+                                                :
+                                                <span t-field="o.fabric"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Gmt. Type</td>
+                                            <td>
+                                                :
+                                                <span t-field="o.product_tmpl_id.garment_type"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Color</td>
+                                            <td>
+                                                :
+                                                <span t-if="o.product_color" t-field="o.product_color"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Remarks</strong>
+                                            </td>
+                                            <td>
+                                                :
+                                                <span t-field="o.remark"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="padding-right: 10px">
+                                    <table style="width:100%; vertical-align:top;">
+                                        <tr>
+                                            <td>Buyer</td>
+                                            <td>
+                                                :
+                                                <span t-field="o.product_tmpl_id.buyer"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Date</td>
+                                            <td>
+                                                :
+                                                <span t-field="o.prepared_datetime"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Machine Type</td>
+                                            <td>
+                                                :
+                                                <span t-if="o.operation_ids" t-field="o.operation_ids[0].workcenter_id.name"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="padding-right: 10px">
+                                    <table style="width:100%; vertical-align:top;">
+                                        <tr>
+                                            <td>Pcs</td>
+                                            <td>
+                                                :
+                                                <span t-field="o.product_qty"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Load Weight(Kg)</td>
+                                            <td>
+                                                :
+                                                <span t-field="o.load_weight"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Piece Weight(g)</td>
+                                            <td>
+                                                :
+                                                <span t-field="o.piece_weight"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Formula sheet table details -->
+                    <hr/>
+                    <table class="table table-sm" t-if="o.bom_line_ids" style="width:100%; text-align:left;">
+                        <t t-set="has_product_barcode"
+                           t-value="any(m.product_id.barcode for m in o.bom_line_ids)"/>
+                        <thead>
+                            <tr>
+                                <th>Process</th>
+                                <th>Temp(<sub>o</sub>C)
+                                </th>
+                                <th>pH</th>
+                                <th>Instruction</th>
+                                <th>Time(Min)</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th t-if="has_product_barcode" width="15%" class="text-center">Barcode
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="o.bom_line_ids">
+                                <t t-set="previous_operation" t-value="False"/>
+                                <t t-set="previous_instruction" t-value="False"/>
+                                <t t-set="previous_ph" t-value="False"/>
+                                <t t-set="previous_temp" t-value="False"/>
+                                <tr t-foreach="o.bom_line_ids" t-as="raw_line">
+                                    <!-- Not in same operation -->
+                                    <t t-if="previous_operation != raw_line.operation_id.name or previous_instruction != raw_line.operation_id.instruction or previous_ph != raw_line.operation_id.ph_value or previous_temp != raw_line.operation_id.temp">
+                                        <td style="border-top: 2px solid #ddd;">
+                                            <!--process-->
+                                            <span t-field="raw_line.operation_id.name"/>
+                                        </td>
+                                        <td style="border-top: 2px solid #ddd;">
+                                            <span t-if="raw_line.operation_id.temp > 0" t-field="raw_line.operation_id.temp"/>
+                                            <!--Temp-->
+                                        </td>
+                                        <td style="border-top: 2px solid #ddd;">
+                                            <span t-field="raw_line.operation_id.ph_value"/>
+                                            <!--pH-->
+                                        </td>
+                                        <td style="border-top: 2px solid #ddd;">
+                                            <span t-field="raw_line.operation_id.instruction"/>
+                                            <!-- Instruction -->
+                                        </td>
+                                        <td style="border-top: 2px solid #ddd;">
+                                            <span t-field="raw_line.operation_id.time_cycle"/>
+                                            <!-- Time(Min) -->
+                                        </td>
+                                        <td style="border-top: 2px solid #ddd;">
+                                            <span t-field="raw_line.product_id"/>
+                                            <!-- Product -->
+                                        </td>
+                                        <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}"
+                                            style="border-top: 2px solid #ddd;">
+                                            <span t-field="raw_line.product_qty"/>
+                                            <span t-field="raw_line.product_uom_id" groups="uom.group_uom"/>
+                                        </td>
+                                        <td t-if="has_product_barcode" width="15%" class="text-center"
+                                            style="border-top: 2px solid #ddd;">
+                                            <t t-if="raw_line.product_id.barcode">
+                                                <div t-field="o.name"
+                                                     t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}"/>
+                                            </t>
+                                        </td>
+                                        <t t-set="previous_operation" t-value="raw_line.operation_id.name"/>
+                                        <t t-set="previous_instruction" t-value="raw_line.operation_id.instruction"/>
+                                        <t t-set="previous_temp" t-value="raw_line.operation_id.temp"/>
+                                        <t t-set="previous_ph" t-value="raw_line.operation_id.ph_value"/>
+                                    </t>
+
+                                    <!-- In same operation -->
+                                    <t t-else="">
+                                        <td>
+                                            <!--process-->
+                                            <!--<span t-field="raw_line.operation_id.name"/>-->
+                                        </td>
+                                        <td>
+                                            <!-- <span t-field="raw_line.operation_id.temp"/> -->
+                                            <!--Temp-->
+                                        </td>
+                                        <td>
+                                            <!-- <span t-field="raw_line.operation_id.ph_value"/> -->
+                                            <!--pH-->
+                                        </td>
+                                        <td>
+                                            <!-- <span t-field="raw_line.operation_id.instruction"/> -->
+                                            <!-- Instruction -->
+                                        </td>
+                                        <td>
+                                            <!-- <span t-field="raw_line.operation_id.time_cycle"/> -->
+                                            <!-- Time(Min) -->
+                                        </td>
+                                        <td>
+                                            <span t-field="raw_line.product_id"/>
+                                            <!-- Product -->
+                                        </td>
+                                        <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">
+                                            <span t-field="raw_line.product_qty"/>
+                                            <span t-field="raw_line.product_uom_id" groups="uom.group_uom"/>
+                                        </td>
+                                        <td t-if="has_product_barcode" width="15%" class="text-center">
+                                            <t t-if="raw_line.product_id.barcode">
+                                                <div t-field="o.name"
+                                                     t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}"/>
+                                            </t>
+                                        </td>
+                                        <t t-set="previous_operation" t-value="raw_line.operation_id.name"/>
+                                        <t t-set="previous_instruction" t-value="raw_line.operation_id.instruction"/>
+                                        <t t-set="previous_temp" t-value="raw_line.operation_id.temp"/>
+                                        <t t-set="previous_ph" t-value="raw_line.operation_id.ph_value"/>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <hr/>
+                    <!-- Formula sheet bottom details -->
+                    <div class="formula_sheet_bottom" style="margin: 20px 0 20px 0;">
+                        <table style="width:100%;">
+                            <tr>
+                                <td>
+                                    <strong>Hydro Extractor (Minutes)</strong>
+                                </td>
+                                <td style="padding-left: -20px; padding-right: 20px;">
+                                    <strong>:</strong>
+                                    <span t-field="o.hydro_extract_time"/>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <strong>Prepared by</strong>
+                                </td>
+                                <td>
+                                    <strong>:</strong>
+                                    <span t-field="o.prepared_by"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Hot Dryer (Temp <sup>o</sup>C)
+                                    </strong>
+                                </td>
+                                <td style="padding-left: -20px; padding-right: 20px;">
+                                    <strong>:</strong>
+                                    <span t-field="o.hot_dryer_temp"/>
+                                </td>
+                                <td>
+                                    <strong>Cool Dry</strong>
+                                </td>
+                                <td style="padding-left: -20px; padding-right: 20px;">
+                                    <strong>:</strong>
+                                    <span t-field="o.cool_dry"/>
+                                </td>
+                                <td>
+                                    <strong>Date Approved</strong>
+                                </td>
+                                <td>
+                                    <strong>:</strong>
+                                    <span t-field="o.date_approved"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Hot Dryer Time (Minutes)</strong>
+                                </td>
+                                <td style="padding-left: -20px; padding-right: 20px;">
+                                    <strong>:</strong>
+                                    <span t-field="o.hot_dryer_time"/>
+                                </td>
+                                <td>
+                                    <strong>Cool Dry Time (Minutes)</strong>
+                                </td>
+                                <td style="padding-left: -20px; padding-right: 20px;">
+                                    <t t-if="o.cool_dry == 'yes'">
+                                        <strong>:</strong>
+                                        <span t-field="o.cool_dry_time"/>
+                                    </t>
+                                </td>
+                                <td>
+                                    <strong>Approved by</strong>
+                                </td>
+                                <td>
+                                    <strong>:</strong>
+                                    <span t-field="o.approved_by"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="margin-top: 10px;">
+                            <p>Printed on:
+                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+                <!--                    </t>-->
+            </t>
+        </t>
+    </template>
+    <record id="formula_sheet_report" model="ir.actions.report">
+        <field name="name">Formula Sheet</field>
+        <field name="model">mrp.bom</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ucwp_mrp.report_formula_sheet</field>
+        <field name="report_file">ucwp_mrp.report_formula_sheet</field>
+        <field name="binding_model_id" ref="model_mrp_bom"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

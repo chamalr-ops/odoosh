@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Cost analysis report-->
+    <template id="mrp_cost_analysis_report">
+        <t t-call="web.basic_layout">
+            <p>Sample</p>
+        </t>
+    </template>
+
+    <!-- Cost Analysis report -->
+    <record id="action_cost_struct_mrp_production_union_colombo" model="ir.actions.report">
+        <field name="name">Cost Analysis Report</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">ucwp_mrp.mrp_cost_analysis_report</field>
+        <field name="report_file">ucwp_mrp.mrp_cost_analysis_report</field>
+        <field name="print_report_name">'Cost Analysis - %s ' % object.name</field>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

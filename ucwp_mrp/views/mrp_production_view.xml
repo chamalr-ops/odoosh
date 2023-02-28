@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- MO -->
+    <record id="mrp_production_form_view_inherit_ucwp" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.ucwp</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Header -->
+            <xpath expr="//button[@name='action_confirm']" position="after">
+                <button name="finish_all_workorder" string="Finish Workorders" type="object" class="oe_highlight"
+                        groups="base.group_user"
+                        attrs="{'invisible': ['|', ('all_workorders_finished','=', True), ('state', 'not in', ['confirmed', 'progress'])]}"/>
+                <field name="all_workorders_finished" invisible="1"/>
+            </xpath>
+            <!--     -->
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="unique_no"/>
+            </xpath>
+            <xpath expr="//field[@name='bom_id']" position="after">
+                <field name="product_color" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='operations']" position="after">
+                <!-- Garment Allocation tab -->
+                <page string="Garment Allocation" name="garment_allocation_line">
+                    <field name="garment_allocation_line">
+                        <tree editable="bottom">
+                            <field name="lot_id"/>
+                            <field name="logistic_qty"/>
+                            <field name="post_production_qty"/>
+                            <field name="sample_room_qty"/>
+                            <field name="lot_qty" sum="Total Quantity"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- BoM -->
+    <record id="mrp_bom_form_view_inherit_ucwp" model="ir.ui.view">
+        <field name="name">mrp.bom.form.inherit.ucwp</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Header BoM -->
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','=', 'confirm')]}"/>
+                    <button name="action_draft" string="Set to Draft" type="object"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','!=', 'confirm')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                </header>
+            </xpath>
+
+            <xpath expr="//sheet/group[1]" position="before">
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" nolabel="1"/>
+                    </h1>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="product_color"/>
+            </xpath>
+
+            <!-- Rename Quantity field -->
+            <xpath expr="//group[1]/group[1]/label[1]" position="attributes">
+                <attribute name="string">Batch Quantity</attribute>
+            </xpath>
+
+            <xpath expr="//group[1]" position="after">
+                <group>
+                    <group string="Garment Details">
+                        <field name="wash_type"/>
+                        <field name="fabric"/>
+                        <field name="load_weight"/>
+                        <field name="piece_weight"/>
+                        <field name="remark"/>
+                    </group>
+                    <group string="Washing Details">
+                        <field name="hydro_extract_time"/>
+                        <field name="hot_dryer_temp"/>
+                        <field name="hot_dryer_time"/>
+                        <field name="cool_dry"/>
+                        <field name="cool_dry_time"
+                               attrs="{'invisible': [('cool_dry', '!=', 'yes')], 'required': [('cool_dry', '=', 'yes')]}"/>
+                    </group>
+                    <group string="BoM Authorization Details">
+                        <field name="prepared_by"/>
+                        <field name="prepared_datetime"/>
+                        <field name="date_approved"/>
+                        <field name="approved_by"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- BoM tree view -->
+    <record id="mrp_bom_tree_view_inherit_ucwp" model="ir.ui.view">
+        <field name="name">mrp.bom.tree.inherit.ucwp</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_tmpl_id']" position="before">
+                <field name="name"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Work order in BoM -->
+    <record id="mrp_routing_workcenter_tree_view_inherit_ucwp" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.tree.inherit.ucwp</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='workcenter_id']" position="after">
+                <field name="instruction"/>
+                <field name="temp"/>
+                <field name="ph_value"/>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='workcenter_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="workcenter_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Workcenter Form view -->
+    <record id="mrp_routing_workcenter_form_view_inherit_ucwp" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.form.inherit.ucwp</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bom_product_template_attribute_value_ids']" position="after">
+                <field name="instruction"/>
+                <field name="temp"/>
+                <field name="ph_value"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Work order in MO -->
+    <record id="mrp_production_workorder_tree_view_inherit_ucwp" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.tree.inherit.ucwp</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+        <field name="arch" type="xml">
+            <field name="workcenter_id" position="after">
+                <field name="temp"/>
+                <field name="ph_value"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Manufacture wizard -->
+    <!-- manufacture wizard list view -->
+    <record id="mrp_production_wizard_tree_view" model="ir.ui.view">
+        <field name="name">mrp.production.wizard.tree.view</field>
+        <field name="model">mrp.production.wizard</field>
+        <field name="arch" type="xml">
+            <tree string="Manufacture Order">
+                <field name="product_id"/>
+                <field name="unique_no"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- manufacture wizard form view -->
+    <record id="mrp_production_wizard_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.wizard.form.view</field>
+        <field name="model">mrp.production.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Manufacture Order">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
+                            <field name="unique_no"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for manufacture wizard -->
+    <record id="mrp_production_wizard_action" model="ir.actions.act_window">
+        <field name="name">Manufacture Order Wizard</field>
+        <field name="res_model">mrp.production.wizard</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="mrp_production_wizard_action" id="mrp_production_wizard_menu"
+            parent="mrp.menu_mrp_manufacturing" sequence="1"/>
+
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Res Partner Form view -->
+    <record id="view_partner_form_view_inherit_sales" model="ir.ui.view">
+        <field name="name">res.partner.form.view.inherit.sales</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='misc']" position="after">
+                <group string="Customer Additional Info" name="customer_info">
+                    <field name="customer_currency_id"/>
+                    <field name="payment_method"/>
+                    <field name="credit_limit_available" attrs="{'invisible':[('payment_method', '!=','credit')]}"/>
+                    <field name="credit_limit" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible':[('credit_limit_available', '!=', True)]}"/>
+                    <field name="available_credit_limit" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible':[('credit_limit_available', '!=', True)]}"/>
+                    <field name="total_pending_payments" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible':[('credit_limit_available', '!=', True)]}"/>
+                    <field name="geo_location"/>
+                </group>
+            </xpath>
+
+            <field name="vat" position="after">
+                <field name="svat_id"/>
+                <field name="nbt_id"/>
+            </field>
+
+            <xpath expr="//group[@name='sale']" position="inside">
+                <field name="is_customer"/>
+                <!-- UCWP|IMP|-00058 Credit Note Value Limit Creation -->
+                <label for="credit_note_percentage"/>
+                <div>
+                    <field name="credit_note_percentage" class="oe_inline" nolabel="1"/>
+                    <span class="o_form_label oe_inline">%</span>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='purchase']" position="inside">
+                <field name="is_supplier"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,3 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+actually_received_product_quantity_access_base_user,actually_received_product_quantity_access_base,model_actually_received_product_quantity,base.group_user,1,1,1,1
+delivery_requirement_access_base_user,delivery_requirement_access_base,model_delivery_requirement,base.group_user,1,1,1,1
