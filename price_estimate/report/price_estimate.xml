@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Price Estimate report template-->
+    <template id="price_estimate_report_template">
+        <t t-call="web.html_container">
+            <div class="page">
+
+                <div id="price_estimate_header"
+                     style="text-align:center; border-style:solid; width:100%; margin-bottom:20px; margin-top: 5px;">
+                    <h2>UNION COLOMBO INDUSTRIAL WASHING (PVT) LTD</h2>
+                    <h3>PRICE ESTIMATE</h3>
+                </div>
+
+                <t t-foreach="docs" t-as="o">
+                    <div id="price_estimate_barcode" style="width:100%; margin-bottom:20px;">
+                        <table>
+                            <tr>
+                                <td width="25%"></td>
+                                <td width="25%"></td>
+                                <td width="25%"></td>
+                                <td style="text-align:center; width:25%;">
+                                    <span>
+                                        <div t-field="o.name"
+                                             t-options="{'widget': 'barcode', 'width': 600, 'height': 60, 'img_style': 'width:350px;height:40px'}"/>
+                                    </span>
+                                    <h3><span t-field="o.name"/></h3>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <table width="100%">
+                        <tr>
+                            <td>Style No</td>
+                            <td>:
+                                <span t-field="o.product_id"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td>Total Price</td>
+                            <td>:
+                                <span t-esc="o.total_cost_of_wet_and_dry"/>
+                                <t t-esc="o.res_currency.display_name"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Buyer</td>
+                            <td align="left">:
+                                <span t-field="o.buyer"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Customer</td>
+                            <td align="left">:
+                                <span t-field="o.customer"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Rate Per Piece(US$)</td>
+                            <td align="left">:
+                                <span t-field="o.rate_per_piece"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Type of Garment</td>
+                            <td align="left">:
+                                <span t-field="o.garment_type"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">GSN</td>
+                            <td align="left">:
+                                <span t-field="o.gsn"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Accepted Damage %</td>
+                            <td align="left">:
+                                <span t-field="o.accepted_damage"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Order Quantity(PCS)</td>
+                            <td align="left">:
+                                <span t-field="o.order_qty"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Average per day(PCS)</td>
+                            <td align="left">:
+                                <span t-field="o.avg_per_day"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Weight of Garment</td>
+                            <td align="left">:
+                                <span t-field="o.weight"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Size Range</td>
+                            <td align="left">:
+                                <span t-field="o.size_range"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Wash Type</td>
+                            <td align="left">:
+                                <span t-field="o.wash_type"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Fabric Composition</td>
+                            <td align="left">:
+                                <span t-field="o.fabric_composition"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Expected Start Date</td>
+                            <td align="left">:
+                                <span t-field="o.expt_start_date"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Wash Duration</td>
+                            <td align="left">:
+                                <span t-field="o.wash_duration"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Rep Code</td>
+                            <td align="left">:
+                                <span t-field="o.rep_code"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Payment Terms</td>
+                            <td align="left">:
+                                <span t-field="o.payment_term_id"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <br/>
+                    <strong>Wet Process</strong>
+                    <hr/>
+                    <table class="table table-sm o_main_table" width="100%">
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <center>
+                                    <th class="text-left">Operation
+                                        <hr/>
+                                    </th>
+                                    <th class="text-right">Cost
+                                        <hr/>
+                                    </th>
+                                    <th class="text-right">Actual No of Pieces for Hour
+                                        <hr/>
+                                    </th>
+                                    <th class="text-right">Target No of Pieces for Hour
+                                        <hr/>
+                                    </th>
+                                    <th class="text-right">Price
+                                        <hr/>
+                                    </th>
+                                </center>
+                            </tr>
+                        </thead>
+                        <tbody class="invoice_tbody">
+                            <t t-foreach="o.pre_costing_wet_process_lines" t-as="wet">
+                                <center>
+                                    <tr t-att-class="'bg-200 font-weight-bold o_line_section'">
+                                        <td>
+                                            <span t-esc="wet.operation.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="wet.cost"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="wet.pieces_for_hour_actual"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="wet.pieces_for_hour_target"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="wet.price"/>
+                                            <t t-esc="wet.res_currency.display_name"/>
+                                        </td>
+                                    </tr>
+                                </center>
+                            </t>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <br/>
+                    <strong>Dry Process</strong>
+                    <hr/>
+                    <table class="table table-sm o_main_table" width="100%">
+                        <thead style="display: table-row-group">
+                            <tr>
+                                <th class="text-left">Operation
+                                    <hr/>
+                                </th>
+                                <th>Cost
+                                    <hr/>
+                                </th>
+                                <th>Actual No of Pieces for Hour
+                                    <hr/>
+                                </th>
+                                <th>Target No of Pieces for Hour
+                                    <hr/>
+                                </th>
+                                <th class="text-right">Price
+                                    <hr/>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="o.pre_costing_dry_process_lines" t-as="dry">
+                                <tr class="'bg-200 font-weight-bold o_line_section'">
+                                    <td>
+                                        <span t-esc="dry.operation.name" class="text-left"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="dry.cost"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="dry.pieces_for_hour_actual"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="dry.pieces_for_hour_target"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="dry.price"/>
+                                        <t t-esc="dry.res_currency.display_name"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!-- Price Estimate report template without breakdown-->
+    <template id="price_estimate_report_template_without_breakdown">
+        <t t-call="web.html_container">
+            <div class="page">
+
+                <div id="price_estimate_header"
+                     style="text-align:center; border-style:solid; width:100%; margin-bottom:20px; margin-top: 5px;">
+                    <h2>UNION COLOMBO INDUSTRIAL WASHING (PVT) LTD</h2>
+                    <h3>PRICE ESTIMATE</h3>
+                </div>
+
+                <t t-foreach="docs" t-as="o">
+                    <div id="price_estimate_barcode" style="width:100%; margin-bottom:20px;">
+                        <table>
+                            <tr>
+                                <td width="25%"></td>
+                                <td width="25%"></td>
+                                <td width="25%"></td>
+                                <td style="text-align:center; width:25%;">
+                                    <span>
+                                        <div t-field="o.name"
+                                             t-options="{'widget': 'barcode', 'width': 600, 'height': 60, 'img_style': 'width:350px;height:40px'}"/>
+                                    </span>
+                                    <h3><span t-field="o.name"/></h3>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <table width="100%">
+                        <tr>
+                            <td>Style No</td>
+                            <td>:
+                                <span t-field="o.product_id"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td>Total Price</td>
+                            <td>:
+                                <span t-esc="o.total_cost_of_wet_and_dry"/>
+                                <t t-esc="o.res_currency.display_name"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Buyer</td>
+                            <td align="left">:
+                                <span t-field="o.buyer"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Customer</td>
+                            <td align="left">:
+                                <span t-field="o.customer"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Rate Per Piece(US$)</td>
+                            <td align="left">:
+                                <span t-field="o.rate_per_piece"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Type of Garment</td>
+                            <td align="left">:
+                                <span t-field="o.garment_type"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">GSN</td>
+                            <td align="left">:
+                                <span t-field="o.gsn"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Accepted Damage %</td>
+                            <td align="left">:
+                                <span t-field="o.accepted_damage"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Order Quantity(PCS)</td>
+                            <td align="left">:
+                                <span t-field="o.order_qty"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Average per day(PCS)</td>
+                            <td align="left">:
+                                <span t-field="o.avg_per_day"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Weight of Garment</td>
+                            <td align="left">:
+                                <span t-field="o.weight"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Size Range</td>
+                            <td align="left">:
+                                <span t-field="o.size_range"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Wash Type</td>
+                            <td align="left">:
+                                <span t-field="o.wash_type"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Fabric Composition</td>
+                            <td align="left">:
+                                <span t-field="o.fabric_composition"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Expected Start Date</td>
+                            <td align="left">:
+                                <span t-field="o.expt_start_date"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Wash Duration</td>
+                            <td align="left">:
+                                <span t-field="o.wash_duration"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">Rep Code</td>
+                            <td align="left">:
+                                <span t-field="o.rep_code"/>
+                            </td>
+                            <td>
+                                <p></p>
+                            </td>
+                            <td align="left">Payment Terms</td>
+                            <td align="left">:
+                                <span t-field="o.payment_term_id"/>
+                            </td>
+                        </tr>
+                    </table>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!--    action for Price Estimate report-->
+    <record id="price_estimate_report_action" model="ir.actions.report">
+        <field name="name">Price Estimate</field>
+        <field name="model">pre.costing</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">price_estimate.price_estimate_report_template</field>
+        <field name="report_file">price_estimate.price_estimate_report_template</field>
+        <field name="binding_model_id" ref="model_pre_costing"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!--    action for Price Estimate without breakups report-->
+    <record id="price_estimate_without_breakdown_report_action" model="ir.actions.report">
+        <field name="name">Price Estimate(Without Breakdown)</field>
+        <field name="model">pre.costing</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">price_estimate.price_estimate_report_template_without_breakdown</field>
+        <field name="report_file">price_estimate.price_estimate_report_template_without_breakdown</field>
+        <field name="print_report_name">'Price Estimate'</field>
+        <field name="binding_model_id" ref="model_pre_costing"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- quality check tree view-->
+    <record id="ucwp_quality_check_tree_view" model="ir.ui.view">
+        <field name="name">quality.check.basic.tree.view</field>
+        <field name="model">quality.check.basic</field>
+        <field name="arch" type="xml">
+            <tree string="Quality">
+                <field name="name"/>
+                <field name="grn"/>
+                <field name="manufacture_order"/>
+                <field name="quality_point"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- quality check form view-->
+    <record id="ucwp_quality_check_form_view" model="ir.ui.view">
+        <field name="name">quality.check.basic.form.view</field>
+        <field name="model">quality.check.basic</field>
+        <field name="arch" type="xml">
+            <form string="Quality">
+                <header>
+                    <button name="set_to_validate" type="object"
+                            string="Lock" class="oe_highlight"
+                            attrs="{'invisible': [('state', '=', 'lock')]}"/>
+                    <button name="action_send_quality_email" type="object"
+                            string="Send By Email" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'lock')]}"/>
+                    <button name="set_to_draft" type="object"
+                            string="Set to Draft"
+                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,lock"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <!-- [UC-11] -->
+                            <field name="quality_point"/>
+                            <field name="partner_id" invisible="1"/>
+                            <field name="grn"
+                                   attrs="{'invisible': [('quality_point', '=', 'after_wash')], 'required': [('quality_point', '=', 'before_wash')]}"/>
+                            <field name="manufacture_order"
+                                   attrs="{'invisible': [('quality_point', '=', 'before_wash')], 'required': [('quality_point', '=', 'after_wash')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Quality Lines" name="quality_check_lines">
+                            <field name="quality_check_lines" context="{'default_quality_point':quality_point}">
+                                <tree string="Quality Lines">
+                                    <field name="grn" invisible="1"/>
+                                    <field name="partner_id" invisible="1"/>
+                                    <field name="quality_point" invisible="1"/>
+                                    <field name="product"/>
+                                    <field name="lot_no"/>
+                                    <field name="lot_qty"
+                                           attrs="{'column_invisible': [('parent.quality_point', '=', 'before_wash')]}"/>
+                                    <field name="inspected_qty"
+                                           attrs="{'column_invisible': [('parent.quality_point', '=', 'after_wash')]}"/>
+                                    <field name="rest_qty" string="Inspected Quantity"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for quality check-->
+    <record id="ucwp_quality_check_action" model="ir.actions.act_window">
+        <field name="name">Quality Check</field>
+        <field name="res_model">quality.check.basic</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="ucwp_quality_check_action" id="quality_check_menu"
+            parent="stock.menu_stock_root" sequence="90"/>
+
+
+    <!-- Quality check lines form view-->
+    <record id="ucwp_quality_check_line_form_view" model="ir.ui.view">
+        <field name="name">quality.check.basic.line.form.view</field>
+        <field name="model">quality.check.lines</field>
+        <field name="arch" type="xml">
+            <form string="Quality Lines">
+                <header>
+                    <field name="quality_point" invisible="1"/>
+                    <field name="grn" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product"/>
+                            <field name="rest_qty" string="Inspected Quantity"/>
+                        </group>
+                        <group>
+                            <field name="lot_no"/>
+                            <field name="grn_qty" attrs="{'invisible': [('quality_point', '=', 'after_wash')]}"/>
+                            <field name="inspected_qty" attrs="{'invisible': [('quality_point', '=', 'after_wash')]}"/>
+                            <field name="lot_qty" attrs="{'invisible': [('quality_point', '=', 'before_wash')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <!-- UCWP|IMP|-00048 Quality check process - Re-engineering -->
+                        <page string="Quality Check Info" name="quality_check_line_info">
+                            <field name="quality_check_line_info" context="{'default_quality_point':quality_point,
+                            'default_lot_id': lot_no}">
+                                <tree string="Quality Check Info">
+                                    <field name="quality_point" invisible="1"/>
+                                    <field name="display_process_button" invisible="1"/>
+                                    <field name="display_return_button" invisible="1"/>
+                                    <field name="display_rewash_button" invisible="1"/>
+                                    <field name="pass_fail"/>
+                                    <field name="lot_id"/>
+                                    <field name="quantity"/>
+                                    <field name="defects"
+                                           attrs="{'invisible': ['|',('pass_fail', '=', 'pass'),('pass_fail', '=', False)]}"/>
+                                    <field name="comment"
+                                           attrs="{'required': [('state', '=', 'processed'),('pass_fail', '=', 'fail')], 'invisible': [('pass_fail', '=', 'pass')]}"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Quality Check line info form view -->
+    <record id="quality_check_line_info_form_view" model="ir.ui.view">
+        <field name="name">quality.check.line.info.form.view</field>
+        <field name="model">quality.check.line.info</field>
+        <field name="arch" type="xml">
+            <form string="Quality Lines Info">
+                <header>
+                    <!-- <field name="quality_point" invisible="1"/>-->
+                    <field name="display_process_button" invisible="1"/>
+                    <field name="display_return_button" invisible="1"/>
+                    <field name="display_rewash_button" invisible="1"/>
+                     <field name="display_dispose_button" invisible="1"/>
+                    <field name="grn" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+
+                    <button name="process_garment" type="object"
+                            class="oe_highlight" groups="base.group_user"
+                            string="Process"
+                            help="Process Garments"
+                            attrs="{'invisible': ['|', ('return_count', '=', 1), ('display_process_button', '=', False)]}"
+                    />
+                    <button name="return_garment" type="object"
+                            class="oe_highlight" groups="base.group_user"
+                            string="Return"
+                            help="Return Garments"
+                            attrs="{'invisible': ['|', ('return_count', '=', 1), ('display_return_button', '=', False)]}"
+                    />
+                    <button name="rewash_garment" type="object"
+                            class="oe_highlight" groups="base.group_user"
+                            string="Rewash"
+                            help="Rewash Garments"
+                            attrs="{'invisible': [('display_rewash_button', '=', False)]}"
+                    />
+                     <button name="dispose_garment" type="object"
+                             class="oe_highlight" groups="base.group_user"
+                             string="Dispose"
+                             help="Dispose Garments"
+                             attrs="{'invisible': [('display_dispose_button', '=', False)]}"
+                             />
+                    <field name="state" widget="statusbar" statusbar_visible="processed,disposed,returned,rewashed, "/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_return"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-shipping-fast"
+                                attrs="{'invisible': [('return_count', '=', 0)]}">
+                            <field name="return_count" widget="statinfo" string="Returns"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="pass_fail"/>
+                            <field name="quantity"/>
+                            <field name="defects" widget="many2many_tags"
+                                   attrs="{'invisible': ['|',('pass_fail', '=', 'pass'),('pass_fail', '=', False)]}"/>
+                            <field name="comment"
+                                   attrs="{'required': [('state', '=', 'processed'),('pass_fail', '=', 'fail')], 'invisible': [('pass_fail', '=', 'pass')]}"/>
+                        </group>
+                        <group>
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

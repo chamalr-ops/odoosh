@@ -1,0 +1,9 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+pre_costing_access_base_user,pre_costing_access_base,model_pre_costing,base.group_user,1,1,1,1
+pre_costing_lines_access_base_user,pre_costing_lines_access_base,model_pre_costing_lines,base.group_user,1,1,1,1
+price_estimate_wash_type_access_base_user,price_estimate_wash_type_access_base,model_price_estimate_wash_type,base.group_user,1,1,1,1
+price_estimate_workcenter_access_base_user,price_estimate_workcenter_access_base,model_price_estimate_workcenter,base.group_user,1,1,1,1
+
+garment_type_access_base_user,garment_type_access_base,model_garment_type,base.group_user,1,1,1,1
+
+rep_code_access_base_user,rep_code_access_base,model_rep_code,base.group_user,1,1,1,1

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    defects list view-->
+    <record id="defects_tree_view" model="ir.ui.view">
+        <field name="name">defects.tree.view</field>
+        <field name="model">defects</field>
+        <field name="arch" type="xml">
+            <tree string="Defects">
+                <field name="name"/>
+                <field name="code"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    defects form view-->
+    <record id="defects_form_view" model="ir.ui.view">
+        <field name="name">defects.form.view</field>
+        <field name="model">defects</field>
+        <field name="arch" type="xml">
+            <form string="Defects">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for defects-->
+    <record id="defects_action" model="ir.actions.act_window">
+        <field name="name">Defects</field>
+        <field name="res_model">defects</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="defects_action" id="defects_menu" parent="mrp.menu_mrp_configuration" sequence="1"/>
+
+</odoo>

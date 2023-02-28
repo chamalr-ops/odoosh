@@ -1,0 +1,7 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+quality_check_basic_access_base_user,quality_check_basic_access_base,model_quality_check_basic,base.group_user,1,1,1,1
+quality_check_lines_access_base_user,quality_check_lines_access_base,model_quality_check_lines,base.group_user,1,1,1,1
+quality_check_line_info_access_base_user,quality_check_line_info_access_base,model_quality_check_line_info,base.group_user,1,1,1,1
+
+defects_access_base_user,defects_access_base,model_defects,base.group_user,1,1,1,1
+defects_lines_access_base_user,defects_lines_access_base,model_defects_lines,base.group_user,1,1,1,1

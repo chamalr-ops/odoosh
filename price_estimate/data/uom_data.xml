@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+
+    <!-- UOM.UOM -->
+    <!-- Units -->
+    <record id="product_uom_pcs" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">PCS</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <!-- LENGTH -->
+    <record id="product_uom_yds" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_length"/>
+        <field name="name">Yds</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+    </record>
+
+</odoo>

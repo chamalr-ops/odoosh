@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Pre costing list view -->
+    <record id="pre_costing_tree_view" model="ir.ui.view">
+        <field name="name">pre.costing.tree.view</field>
+        <field name="model">pre.costing</field>
+        <field name="arch" type="xml">
+            <tree string="Price Estimate">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="total_cost_of_wet_and_dry"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Pre costing form view-->
+    <record id="pre_costing_form_view" model="ir.ui.view">
+        <field name="name">pre.costing.form.view</field>
+        <field name="model">pre.costing</field>
+        <field name="arch" type="xml">
+            <form string="Price Estimate">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','=', 'confirm')]}"/>
+                    <button name="action_send_email" string="Send Price Estimate" type="object"
+                            class="oe_highlight" groups="base.group_user"
+                            attrs="{'invisible': [('state','=', 'draft')]}"/>
+                    <button name="action_draft" string="Set to Draft" type="object"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','=', 'draft')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_opportunity"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-lightbulb-o"
+                                attrs="{'invisible': [('opportunity_count', '=', 0)]}">
+                            <div class="o_stat_info">
+                                <field name="opportunity_count"/>
+                                <span class="o_stat_text">Opportunity</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" nolabel="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="customer" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="company_name" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="product_id" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="gsn" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="fabric_composition" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                        </group>
+                        <group>
+                            <field name="res_currency" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <br/>
+                            <br/>
+                            <field name="total_cost_of_wet_and_dry"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="expt_start_date" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="order_qty" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="rate_per_piece" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="wash_duration" widget="float_time"
+                                   attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="accepted_damage" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="rep_code" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                        </group>
+                        <group>
+                            <field name="uni_id" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="weight" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="payment_term_id" options="{'no_open':True,'no_create': True}"
+                                   attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="avg_per_day" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                            <field name="size_range" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Wet Process" name="pre_costing_wet_process_lines">
+                            <field name="pre_costing_wet_process_lines"
+                                   widget="section_and_note_one2many"
+                                   context="{'default_process_type':'wet'}"
+                                   attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                <tree string="Wet Process" editable="bottom">
+                                    <field name="res_currency" invisible="1"/>
+                                    <field name="process_type" invisible="1"/>
+                                    <field name="operation"/>
+                                    <field name="cost" widget="monetary"/>
+                                    <field name="pieces_for_hour_actual"/>
+                                    <field name="pieces_for_hour_target"/>
+                                    <field name="price" widget="monetary"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_wet_line_costs" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                        <page string="Dry Process" name="pre_costing_dry_process_lines"
+                              attrs="{'readonly': [('state', '=', 'confirm')]}">
+                            <field name="pre_costing_dry_process_lines"
+                                   context="{'default_process_type':'dry'}"
+                                   attrs="{'readonly': [('state', '=', 'confirm')]}">
+                                <tree string="Dry Process" editable="bottom">
+                                    <field name="res_currency" invisible="1"/>
+                                    <field name="process_type" invisible="1"/>
+                                    <field name="operation"/>
+                                    <field name="cost" widget="monetary"/>
+                                    <field name="pieces_for_hour_actual"/>
+                                    <field name="pieces_for_hour_target"/>
+                                    <field name="price" widget="monetary"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_dry_line_costs" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                        <page string="Style Info">
+                            <group>
+                                <group>
+                                    <field name="buyer" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                </group>
+                                <group>
+                                    <field name="wash_type" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                    <field name="garment_type" attrs="{'readonly': [('state', '=', 'confirm')]}"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <!--                <field name="activity_ids"/>-->
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for Pre costing -->
+    <record id="pre_costing_action" model="ir.actions.act_window">
+        <field name="name">Price Estimate</field>
+        <field name="res_model">pre.costing</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            name="Price Estimate" id="pre_costing_menu_root"
+            parent="crm.crm_menu_root" sequence="6"/>
+    <menuitem
+            action="pre_costing_action" id="pre_costing_menu"
+            parent="pre_costing_menu_root" sequence="1"/>
+
+    <!-- Pre Costing Lines list view -->
+    <record id="pre_costing_lines_tree_view" model="ir.ui.view">
+        <field name="name">pre.costing.lines.tree.view</field>
+        <field name="model">pre.costing.lines</field>
+        <field name="arch" type="xml">
+            <tree string="Price Estimate Lines">
+                <field name="process_type"/>
+                <field name="operation"/>
+                <field name="cost" widget="monetary"/>
+                <field name="pieces_for_hour_actual"/>
+                <field name="pieces_for_hour_target"/>
+                <field name="price" widget="monetary"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Pre Costing Lines form view-->
+    <record id="pre_costing_lines_form_view" model="ir.ui.view">
+        <field name="name">pre.costing.lines.form.view</field>
+        <field name="model">pre.costing.lines</field>
+        <field name="arch" type="xml">
+            <form string="Price Estimate Lines">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="process_type"/>
+                            <field name="operation"/>
+                            <field name="pieces_for_hour_actual"/>
+                            <field name="pieces_for_hour_target"/>
+                        </group>
+                        <group>
+                            <field name="cost" widget="monetary"/>
+                            <field name="price" widget="monetary"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Work Centers for Price estimate processes list view -->
+    <record id="price_estimate_tree_view" model="ir.ui.view">
+        <field name="name">price.estimate.workcenter.tree.view</field>
+        <field name="model">price.estimate.workcenter</field>
+        <field name="arch" type="xml">
+            <tree string="Operation">
+                <field name="name"/>
+                <field name="process_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Work Centers for Price estimate processes form view-->
+    <record id="price_estimate_form_view" model="ir.ui.view">
+        <field name="name">price.estimate.workcenter.form.view</field>
+        <field name="model">price.estimate.workcenter</field>
+        <field name="arch" type="xml">
+            <form string="Operation">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="process_type"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- action for Price estimate Operation -->
+    <record id="price_estimate_operation_action" model="ir.actions.act_window">
+        <field name="name">Operation</field>
+        <field name="res_model">price.estimate.workcenter</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+            id="price_estimate_operation_menu"
+            name="Operation"
+            parent="pre_costing_menu_root"
+            action="price_estimate_operation_action"
+            sequence="5"/>
+</odoo>

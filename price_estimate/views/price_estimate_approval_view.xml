@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- pre costing approval list view -->
+    <record id="pre_costing_approval_tree_view" model="ir.ui.view">
+        <field name="name">pre.costing.approval.tree.view</field>
+        <field name="model">pre.costing.approval</field>
+        <field name="arch" type="xml">
+            <tree string="Pre Costing Approval">
+                <field name="quotation"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- pre costing approval form view-->
+    <record id="pre_costing_approval_form_view" model="ir.ui.view">
+        <field name="name">pre.costing.approval.form.view</field>
+        <field name="model">pre.costing.approval</field>
+        <field name="arch" type="xml">
+            <form string="Pre Costing Approval">
+                <header>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','!=', 'waiting')]}"/>
+                    <button name="action_wait" string="Waiting" type="object"
+                            groups="base.group_user"
+                            attrs="{'invisible': [('state','!=', 'approved')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="waiting,approved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="quotation"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    action for pre costing approval-->
+    <record id="pre_costing_approval_action" model="ir.actions.act_window">
+        <field name="name">Pre Costing Approval</field>
+        <field name="res_model">pre.costing.approval</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            action="pre_costing_approval_action" id="pre_costing_approval_menu"
+            parent="sale.sale_order_menu" sequence="2"/>
+
+    <!-- pre costing approval wizard form view-->
+    <record id="pre_costing_approval_wizard_form_view" model="ir.ui.view">
+        <field name="name">pre.costing.approval.wizard.form.view</field>
+        <field name="model">pre.costing.approval.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div>
+                        <h1>Warning</h1>
+                    </div>
+                    <br/>
+                    <div>
+<!--                        <p>-->
+<!--                            Sale order price of (product name) is less than the agreed price on pre-costing-->
+<!--                        </p>-->
+                        <field name="warning"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="quotation" invisible="1"/>
+                            <field name="need_to_approve_products" invisible="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="create_approval" string="Request Approval" class="btn-primary" type="object"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

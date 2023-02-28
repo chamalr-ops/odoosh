@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- [UC-08] Manufacturing Orders Form view -->
+    <record id="mrp_production_form_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.union.colombo</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <!-- <header>-->
+            <xpath expr="//button[@name='action_confirm']" position="after">
+                <button name="after_quality_check" string="After Quality Check" type="object" class="oe_highlight"
+                        groups="base.group_user"
+                        attrs="{'invisible': ['|',('state','!=', 'done'),('quality_check_count', '&gt;', 0)]}"/>
+            </xpath>
+            <!-- </header> -->
+
+            <xpath expr="//sheet/div[1]/button[@name='action_view_mrp_production_childs']" position="before">
+                <!-- Quality check view stat button -->
+                <button name="action_view_quality_check"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('quality_check_count', '=', 0)]}">
+                    <field name="quality_check_count" widget="statinfo" string="Quality Check"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

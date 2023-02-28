@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- stock picking form view -->
+    <record id="view_picking_form_view_inherit_union_colombo" model="ir.ui.view">
+        <field name="name">stock.picking.form.view.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='action_confirm']" position="after">
+                <button name="before_quality_check" string="Before-wash QC" type="object" class="oe_highlight"
+                        groups="base.group_user"
+                        attrs="{'invisible': ['|','|','|',('picking_type_code', '!=', 'incoming'),('state','!=', 'done'),('quality_check_count', '&gt;', 0),('bypass_qc', '=', True)]}"/>
+            </xpath>
+
+            <!-- [UC-11] -->
+            <xpath expr="//sheet/div[1]/button[@name='action_picking_move_tree']" position="before">
+                <button name="action_view_quality_count"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': ['|', ('quality_check_count', '&lt;', 1), ('picking_type_code', '!=', 'incoming')]}">
+                    <field name="quality_check_count" widget="statinfo" string="Quality Check"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//sheet/group[1]" position="after">
+                <group>
+                    <group id="before_wash_info" string="Before Wash QC Bypass" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}">
+                        <field name="bypass_qc"/>
+                        <field name="bypass_comment"
+                               attrs="{'required': [('bypass_qc', '=', True)], 'invisible': [('bypass_qc', '=', False)]}"/>
+                        <field name="bypassed_by"
+                               attrs="{'required': [('bypass_qc', '=', True)], 'invisible': [('bypass_qc', '=', False)]}"/>
+                    </group>
+                    <group>
+                        <field name="bw_return_lot" invisible="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
