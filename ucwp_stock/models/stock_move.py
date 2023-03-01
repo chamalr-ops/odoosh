@@ -19,7 +19,7 @@ class Picking(models.Model):
 
     vehicle_number = fields.Char(string='Vehicle Number')
 
-    grn_type = fields.Boolean(string="Garment GRN", default=True)
+    grn_type = fields.Boolean(string="Garment", default=True)
 
     @api.onchange('sale_id')
     def set_moves(self):
