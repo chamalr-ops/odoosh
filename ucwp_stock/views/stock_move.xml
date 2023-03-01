@@ -29,7 +29,7 @@
                 <group>
                     <group>
                         <field name="grn_type"
-                               attrs="{'invisible': [('picking_type_code', '!=', 'incoming')], 'readonly': [('state', '!=', 'draft')]}"/>
+                               attrs="{'invisible': [('picking_type_code', 'not in', ['incoming', 'internal'])], 'readonly': [('state', '!=', 'draft')]}"/>
                     </group>
                     <group></group>
                     <group string="Customer Gate Pass" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}">
